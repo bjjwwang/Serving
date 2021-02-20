@@ -6,7 +6,7 @@
     <br>
 <p>
 
-
+[link](https://github.com/wangjiawei04/Serving/blob/app-0611/README_CN.md#%E5%AE%89%E8%A3%85)
 <p align="center">
     <br>
     <a href="https://travis-ci.com/PaddlePaddle/Serving">
