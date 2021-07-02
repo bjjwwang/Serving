@@ -69,6 +69,11 @@ func BackupTransfer() {
 			Dict.CurrentVersionInfo = newCurrentVersion
 			WriteCurrentVersionInfoToFile()
 		}
+                if Dict.WaitVersionInfo.Mode == dict.DELTA {
+                        var newCurrentVersion []dict.DictVersionInfo
+                        Dict.CurrentVersionInfo = newCurrentVersion
+                        WriteCurrentVersionInfoToFile()
+                }
 		logex.Noticef("[builder finish] WaitVersionInfo version:%v \n", Dict.WaitVersionInfo)
 
 		//deployer
