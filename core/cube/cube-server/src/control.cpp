@@ -165,7 +165,7 @@ int Control::handle_bg_switch(const Document& /*cmd*/, std::string dict_name) {
   Framework* framework = Framework::instance();
   return framework->bg_switch(dict_name);
 }
-int handle_switch_version(const Document& /*cmd*/, std::string dict_name, std::string version) {
+int Control::handle_switch_version(const Document& /*cmd*/, std::string dict_name, std::string version) {
   Framework* framework = Framework:: instance();
   return framework->switch_version(dict_name, version);
 }

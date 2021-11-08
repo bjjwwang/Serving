@@ -102,10 +102,12 @@ int Framework::init() {
       if (rec.cmd == "base") {
         bg_load_base(dict_name, rec.path);
         bg_switch(dict_name);
+        bg_unload(dict_name);
         LOG(INFO) << "init, resume " << content;
       } else if(rec.cmd == "patch") {
         bg_load_patch(dict_name, rec.path);
         bg_switch(dict_name);
+        bg_unload(dict_name);
         LOG(INFO) << "init, resume " << content;
       }
     }  
@@ -130,6 +132,7 @@ void Framework::init_dict(std::string dict_name, uint32_t dict_split) {
 
 VirtualDict* Framework::create_dict() {
     return new (std::nothrow) Dict();
+    //return new Dict();
 }
 
 void Framework::release(VirtualDict* dict) { dict->atom_dec_seek_num(); }
@@ -351,11 +354,16 @@ int Framework::bg_switch(std::string dict_name) {
 }
 
 int Framework::switch_version(std::string dict_name, std::string version) {
+
+  LOG(INFO) << "switch_version, params, dict_name: " << dict_name << " , version: " << version;
+ /*
   DoubleBufDict* ddict = _dict_map.at(dict_name);
   int version_id = std::stod(version);
   std::vector<Record> records = ddict->_version_table->_records;
   std::vector<int> version_path;
-  for (int i = 0; i < version_id; ++i) {
+  LOG(INFO) << "version id:" << version_id;
+  for (int i = 0; i <= version_id; ++i) {
+    LOG(INFO) << "cur cmd: " << records[i].cmd;
     if (records[i].cmd == "base") {
       version_path.push_back(i);
     } else if (records[i].cmd == "patch") {
@@ -371,12 +379,22 @@ int Framework::switch_version(std::string dict_name, std::string version) {
       LOG(ERROR) << "unknown error in switch version";
     }
   }
-  int ret = bg_unload(dict_name);
+  for (int i = 0; i < version_path.size(); ++i) {
+    LOG(INFO) << "switch version path: " << version_path[i];
+  }
+*/
+ DoubleBufDict* dict = _dict_map.at(dict_name); 
+ int ret = bg_unload(dict_name);
+  if (ret != 0) {
+    LOG(WARNING) << "unload background dict failed during version switch";
+  }
   VirtualDict* bg_dict = create_dict();
-  if (!bg_dict) {
-    LOG(ERROR) << "create Dict failed during version switch";
+  LOG(INFO) << "bg_dict: " << bg_dict;
+  if (bg_dict == nullptr) {
+    LOG(ERROR) << "create dict failed during version switch";
     return -1;
   }
+/*
   for (int i = 0; i < version_path.size(); ++i) {
     std::string cmd = records[version_path[i]].cmd;
     std::string path = records[version_path[i]].path;
@@ -388,6 +406,7 @@ int Framework::switch_version(std::string dict_name, std::string version) {
       return ret;
     }
   }
+*/
 }
 
 int Framework::enable(std::string dict_name, const std::string& version) {
